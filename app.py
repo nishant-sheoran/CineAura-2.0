@@ -16,7 +16,6 @@ def book_tickets():
         session['theater'] = request.form.get("theater")
         session['movie'] = request.form.get("movie")
         session['screen'] = request.form.get("screen")
-        flash("Tickets confirmed! Add details for payment or other preferences.")
         return redirect(url_for("select_beverages"))
 
     return render_template("bookTickets.html")
@@ -25,24 +24,21 @@ def book_tickets():
 @app.route("/select_beverages", methods=['GET','POST'])
 def select_beverages() :
     if request.method == 'POST':
-        food_items = []
-        if request.form.get("popcorn") == 'yes' :
-            food_items.append('popcorn')
-        if request.form.get("sandwich") == 'yes':
-            food_items.append('sandwich')
-        session[food_items] = food_items
-        flash("Conform your booking !!")
+        food_items = request.form.getlist('foodandbeverages')
+        session['food_items'] = food_items
         return redirect("confirm_booking")   
     return render_template("selectBeverages.html")
 
 #confirm booking
 @app.route("/confirm_booking" , methods = ['GET', 'POST'])
 def confirm_booking ():
-    theater = session.get('theater', 'Not Selected')
-    movie = session.get('movie', 'Not Selected')
-    screen = session.get('screen','Not Selected')
-    food_items = session.get('food_items', [] )
-
+    if request.method == 'POST':
+        theater = session.get('theater', 'Not Selected')
+        movie = session.get('movie', 'Not Selected')
+        screen = session.get('screen','Not Selected')
+        food_items = session.get('food_items', [] )
+        return redirect("payment")
+    
     return render_template('confirmBooking.html',
         theater = theater,
         movie = movie,
@@ -50,6 +46,11 @@ def confirm_booking ():
         food_items = food_items
     )
 
+#payment 
+@app.route("/payment", methods = ['GET','POST'])
+def payment():
+    screen = session.get('screen','Not Selected')
+    return render_template('payment.html')
 
 if __name__ == "__main__" :
     app.run(debug=True)

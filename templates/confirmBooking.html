@@ -8,8 +8,24 @@
 </head>
 <body>
     <div class="container">
-        <h1>Conform your Booking </h1>
-        
+        <h1>Confirm your Booking</h1>
+        <br> 
+        <p><strong>Theater:</strong> {{ theater }}</p>
+        <p><strong>Movie:</strong> {{ movie }}</p>
+        <p><strong>Screen:</strong> {{ screen }}</p>
+        <p><strong>Food Items:</strong>
+            {% if food_items %}
+                <ul>
+                    {% for item in food_items %}
+                        <p>{{item}}</p>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>None Selected</p>
+            {% endif %}
+        </p>
+
+        <button type="submit">Payment</button>
     </div>
 </body>
 </html>
