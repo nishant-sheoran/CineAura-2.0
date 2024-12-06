@@ -1,6 +1,6 @@
 <h1>Book Movie Tickets</h1>
 <p>Select your preferences below</p>
-<form method='POST' action="/">
+<form method='POST' action="{{ url_for('book_tickets') }}">
     <!-- Select Theater -->
     <label for="theater">Select Theater</label>
     <select id="theater" name="theater">
@@ -25,9 +25,8 @@
     <button type="submit">Confirm tickets</button>
 
     <div class="next-section">
-            <h2>Add Additional Details</h2>
+        <br>
             <p>Once the tickets are confirmed, you can proceed with adding bevrages and food preferences.</p>
-        </div>
     </div>
 
 </form>
