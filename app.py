@@ -32,15 +32,14 @@ def select_beverages() :
 #confirm booking
 @app.route("/confirm_booking" , methods = ['GET', 'POST'])
 def confirm_booking ():
+    theater = session.get('theater', 'Not Selected')
+    movie = session.get('movie', 'Not Selected')
+    screen = session.get('screen','Not Selected')
+    food_items = session.get('food_items', [] )
     if request.method == 'POST':
-        theater = session.get('theater', 'Not Selected')
-        movie = session.get('movie', 'Not Selected')
-        screen = session.get('screen','Not Selected')
-        food_items = session.get('food_items', [] )
         return redirect("payment")
-    
     return render_template('confirmBooking.html',
-        theater = theater,
+        theater = theater ,
         movie = movie,
         screen = screen,
         food_items = food_items
