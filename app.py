@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for,flash, redirect,session
+import random
 
 app = Flask(__name__)
 app.secret_key='this_is_my_secrect_key'
@@ -26,7 +27,7 @@ def select_beverages() :
     if request.method == 'POST':
         food_items = request.form.getlist('foodandbeverages')
         session['food_items'] = food_items
-        return redirect("confirm_booking")   
+        return redirect(url_for("confirm_booking"))   
     return render_template("selectBeverages.html")
 
 #confirm booking
@@ -37,7 +38,7 @@ def confirm_booking ():
     screen = session.get('screen','Not Selected')
     food_items = session.get('food_items', [] )
     if request.method == 'POST':
-        return redirect("payment")
+        return redirect(url_for("payment"))
     return render_template('confirmBooking.html',
         theater = theater ,
         movie = movie,
@@ -46,10 +47,59 @@ def confirm_booking ():
     )
 
 #payment 
-@app.route("/payment", methods = ['GET','POST'])
+@app.route("/payment", methods=['GET', 'POST'])
 def payment():
-    screen = session.get('screen','Not Selected')
-    return render_template('payment.html')
+    screen = session.get('screen', 'Not Selected')
+    food_items = session.get('food_items', [])
+
+    total_amount = 0
+    discount = 0
+    final_price = 0
+
+    if screen == 'gold':
+        if 'Popcorn' in food_items:
+            total_amount += 250
+        if 'Sandwich' in food_items:
+            total_amount += 100
+        discount = 0.1 * total_amount
+        total_amount -= discount
+        final_price = total_amount + 400
+
+    elif screen == 'max':
+        if 'Popcorn' in food_items:
+            total_amount += 250
+        if 'Sandwich' in food_items:
+            total_amount += 100
+        discount = 0.05 * total_amount
+        total_amount -= discount
+        final_price = total_amount + 300
+
+    elif screen == 'general':
+        if 'Popcorn' in food_items:
+            total_amount += 450
+        if 'Sandwich' in food_items:
+            total_amount += 300
+        final_price = total_amount
+
+    else:
+        return "Invalid screen type selected.", 400
+
+    if request.method == 'POST':
+        return redirect(url_for('finalBookTickets'))
+
+    return render_template( 'payment.html',
+        final_price=final_price
+    )
+
+
+#bookTickets - FINAL 
+@app.route('/finalBookTickets', methods = ['GET','POST'])
+def finalBookTickets() :
+    booking_no = random.randint(250,5670)
+    return render_template('finalBookTickets.html',
+        booking_no = booking_no
+    )
+
 
 if __name__ == "__main__" :
     app.run(debug=True)

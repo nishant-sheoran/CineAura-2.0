@@ -8,14 +8,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Final Payment</h1>
-        <p> Total amount : {{final_price}}</p>
+        <h1>Tickets booked !!</h1>
+        <p> Booking ID : {{booking_no}}</p>
 
-        <form action="{{ url_for('payment') }}" method="POST">
-            <button value="submit"> BOOK TICKETS </button>
-        </form>
-        
-         
+        <div class="next-section">
+        <br>
+            <p>Enjoy the movie !!</p>
+            <p>(cancelation available till 30 min prior the show)</p>
+    </div>
     </div>
 </body>
 </html>

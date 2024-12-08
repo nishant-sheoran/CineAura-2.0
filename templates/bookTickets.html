@@ -18,9 +18,9 @@
     <!-- Select Screen Type -->
     <label for="screen">Select Screen Type</label>
     <select id="screen" name="screen">
-        <option value="gold" {% if request.form.get('screen') == 'gold' %} selected {% endif %}>GOLD</option>
-        <option value="max" {% if request.form.get('screen') == 'max' %} selected {% endif %} >MAX</option>
-        <option value="general" {% if request.form.get('screen') == 'general' %} selected {% endif %} >GENERAL</option>
+        <option value="gold" {% if request.form.get('screen') == 'gold' %} selected {% endif %}>GOLD - Rs. 400</option>
+        <option value="max" {% if request.form.get('screen') == 'max' %} selected {% endif %} >MAX - Rs. 300</option>
+        <option value="general" {% if request.form.get('screen') == 'general' %} selected {% endif %} >GENERAL - Rs. 200</option>
     </select>
     <button type="submit">Confirm tickets</button>
 
