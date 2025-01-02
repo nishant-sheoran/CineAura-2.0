@@ -2,21 +2,21 @@
 <p>Select your preferences below</p>
 <form method='POST' action="{{ url_for('book_tickets') }}">
     <!-- Select Theater -->
-    <label for="theater">Select Theater</label>
+    <label for="theater">Select Theater 📽</label>
     <select id="theater" name="theater">
         <option value="pvr-mumbai" {% if request.form.get('theater') == 'pvr-mumbai' %} selected {% endif %} >PVR Cinemas - Mumbai</option>
         <option value="inox-delhi" {% if request.form.get('theater') == 'inox-delhi' %} selected {% endif %} >INOX - Delhi</option>
         <option value="cinepolis-bangalore" {% if request.form.get('theater') == 'cinepolis-bangalore' %} selected {% endif %} >Cinepolis - Bangalore</option>
     </select>
     <!-- Select Movie -->
-    <label for="movie">Select Movie</label>
+    <label for="movie">Select Movie 🎥 </label>
     <select id="movie" name="movie">
         <option value="inception" {% if request.form.get('movie') == 'inception' %} selected {% endif %} >Inception - 10/28/2024, 2:30:00 PM</option>
         <option value="avatar" {% if request.form.get('movie') == 'avatar' %} selected {% endif %} >Avatar - 10/29/2024, 6:00:00 PM</option>
         <option value="joker" {% if request.form.get('movie') == 'joker' %} selected {% endif %} >Joker - 10/30/2024, 9:00:00 PM</option>
     </select>
     <!-- Select Screen Type -->
-    <label for="screen">Select Screen Type</label>
+    <label for="screen">Select Screen Type 🎬 </label>
     <select id="screen" name="screen">
         <option value="gold" {% if request.form.get('screen') == 'gold' %} selected {% endif %}>GOLD - Rs. 400</option>
         <option value="max" {% if request.form.get('screen') == 'max' %} selected {% endif %} >MAX - Rs. 300</option>
