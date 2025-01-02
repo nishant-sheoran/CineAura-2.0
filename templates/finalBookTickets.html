@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment</title>
-    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="{{url_for('static', filename='css/style.css')}}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h1>Tickets booked !!</h1>
-        <p> Booking ID : {{booking_no}}</p>
+      <h1>Tickets booked !!</h1>
+      <p>Booking ID : {{booking_no}}</p>
 
-        <div class="next-section">
-        <br>
-            <p>Enjoy the movie !!</p>
-            <p>(cancelation available till 30 min prior the show)</p>
+      <div class="next-section">
+        <br />
+        <p>Enjoy the movie !!</p>
+        <p>(cancelation available till 30 min prior the show)</p>
+      </div>
     </div>
-    </div>
-</body>
+  </body>
 </html>

@@ -2,7 +2,7 @@
 <p>Select your preferences below</p>
 <form method="POST" action="{{ url_for('book_tickets') }}">
     <!-- Select Theater -->
-    <label for="theater">Select Theater</label>
+    <label for="theater">Select Theater 📽</label>
     <select id="theater" name="theater">
         {% for theater_id, theater_name in theaters.items() %}
         <option value="{{ theater_id }}" {% if request.form.get('theater') == theater_id %} selected {% endif %}>
@@ -11,7 +11,7 @@
         {% endfor %}
     </select>
     <!-- Select Movie -->
-    <label for="movie">Select Movie</label>
+    <label for="movie">Select Movie 🎥 </label>
     <select id="movie" name="movie">
         {% for movie_id, movie_details in movies.items() %}
         <option value="{{ movie_id }}" {% if request.form.get('movie') == movie_id %} selected {% endif %}>
@@ -20,7 +20,7 @@
         {% endfor %}
     </select>
     <!-- Select Screen Type -->
-    <label for="screen">Select Screen Type</label>
+    <label for="screen">Select Screen Type 🎬 </label>
     <select id="screen" name="screen">
         {% for screen_type, price in screens.items() %}
         <option value="{{ screen_type }}" {% if request.form.get('screen') == screen_type %} selected {% endif %}>

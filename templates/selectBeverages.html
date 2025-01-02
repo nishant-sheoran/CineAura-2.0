@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Select Food and Beverages</title>
-    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
-</head>
-<body>
+    <link
+      href="{{url_for('static', filename='css/style.css')}}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h1> Select your Food and Beverages below</h1>
-        <form method='POST' action="{{url_for('select_beverages')}}">
-            <div class="food-options">
-                <label>
-                    <input type="checkbox" name="foodandbeverages" value="Popcorn">
-                    <div class="food-option">Popcorn - Rs.250</div>
-                </label>
-                <label>
-                    <input type="checkbox" name="foodandbeverages" value="Sandwich">
-                    <div class="food-option">Sandwich - Rs.100</div>
-                </label>  
-            </div>
-            <button type="submit">Confirm Food and Beverages</button>
-            
-            <div class="next-section">
-                <p>For discounts -<br>
-                    <strong>
-                        GOLD SCREEN - 10%<br>
-                        MAX SCREEEN - 5%
-                    </strong>
-                </p>
-            </div>
-        </form>
+      <h1>Select your Food&Beverages 🍿🍟</h1>
+      <form method="POST" action="{{url_for('select_beverages')}}">
+        <div class="food-options">
+          <label>
+            <input type="checkbox" name="foodandbeverages" value="Popcorn" />
+            <div class="food-option">Popcorn - Rs.250</div>
+          </label>
+          <label>
+            <input type="checkbox" name="foodandbeverages" value="Sandwich" />
+            <div class="food-option">Sandwich - Rs.100</div>
+          </label>
+        </div>
+        <button type="submit">Confirm Food and Beverages</button>
+
+        <div class="next-section">
+          <p>
+            For discounts -<br />
+            <strong>
+              GOLD SCREEN - 10%<br />
+              MAX SCREEEN - 5%
+            </strong>
+          </p>
+        </div>
+      </form>
     </div>
-</body>
+  </body>
 </html>
-
-
-
-
-
-
