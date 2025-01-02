@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, url_for, flash, redirect, ses
 import sqlite3
 import random
 import datetime
+import string
+import json
 
 app = Flask(__name__)
 app.secret_key = 'this_is_my_secret_key'
@@ -19,12 +21,11 @@ def init_db():
                             food_items TEXT,
                             total_price REAL,
                             booking_time DATETIME,
-                            seat_number INTEGER
+                            seat_number INTEGER,
+                            booking_id TEXT,
+                            canceled INTEGER DEFAULT 0
                           )''')
         # Create waiting list table
-        # Modify in init_db function
-        cursor.execute('DROP TABLE IF EXISTS seats')  # Add this before creating the seats table
-
         cursor.execute('''CREATE TABLE IF NOT EXISTS waiting_list (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             theater TEXT,
@@ -62,11 +63,36 @@ init_db()
 # Basic route
 @app.route("/", methods=["GET"])
 def home():
-    return render_template('index.html')
+    with sqlite3.connect('booking.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM bookings WHERE canceled = 0')
+        rows = cursor.fetchall()
+        bookings = [
+            {
+                "id": row[0],
+                "theater": row[1],
+                "movie": row[2],
+                "screen": row[3],
+                "food_items": row[4],
+                "total_price": row[5],
+                "booking_time": row[6],
+                "seat_number": row[7],
+                "booking_id": row[8]
+            }
+            for row in rows
+        ]
+    return render_template('index.html', bookings=bookings)
 
 # Booking tickets
 @app.route("/book_tickets", methods=['GET', 'POST'])
 def book_tickets():
+    with open('theater_data.json', 'r') as f:
+        data = json.load(f)
+    
+    theaters = data["theaters"]
+    movies = data["movies"]
+    screens = data["screens"]
+    
     if request.method == "POST":
         theater = request.form.get("theater")
         movie = request.form.get("movie")
@@ -87,7 +113,8 @@ def book_tickets():
 
         return redirect(url_for("select_beverages"))
 
-    return render_template("bookTickets.html")
+    return render_template("bookTickets.html", theaters=theaters, movies=movies, screens=screens)
+
 
 # Select beverages
 @app.route("/select_beverages", methods=['GET', 'POST'])
@@ -174,6 +201,7 @@ def payment():
 
     if request.method == 'POST':
         # Allocate a seat and save booking to database
+        booking_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
         with sqlite3.connect('booking.db') as conn:
             cursor = conn.cursor()
             cursor.execute('SELECT booked_seats FROM seats WHERE theater = ? AND screen = ?', (theater, screen))
@@ -183,27 +211,54 @@ def payment():
             cursor.execute('''UPDATE seats SET booked_seats = booked_seats + 1 WHERE theater = ? AND screen = ?''',
                            (theater, screen))
 
-            cursor.execute('''INSERT INTO bookings (theater, movie, screen, food_items, total_price, booking_time, seat_number)
-                              VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                           (theater, movie, screen, session['food_items'], final_price, datetime.datetime.now(), seat_number))
+            cursor.execute('''INSERT INTO bookings (theater, movie, screen, food_items, total_price, booking_time, seat_number, booking_id)
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                           (theater, movie, screen, session['food_items'], final_price, datetime.datetime.now(), seat_number, booking_id))
             conn.commit()
 
-        return redirect(url_for('finalBookTickets'))
+        return redirect(url_for('finalBookTickets', booking_id=booking_id))
 
     return render_template('payment.html', final_price=final_price)
+
+# Cancel booking
+@app.route("/cancel_booking/<booking_id>", methods=['POST'])
+def cancel_booking(booking_id):
+    with sqlite3.connect('booking.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT booking_time, screen, theater FROM bookings WHERE booking_id = ? AND canceled = 0', (booking_id,))
+        booking = cursor.fetchone()
+
+        if not booking:
+            flash('Booking not found or already canceled.')
+            return redirect(url_for('home'))
+
+        booking_time = datetime.datetime.strptime(booking[0], '%Y-%m-%d %H:%M:%S')
+        screen = booking[1]
+        theater = booking[2]
+
+        if (datetime.datetime.now() - booking_time).total_seconds() > 30 * 60:
+            flash('Cannot cancel booking less than 30 minutes before the movie.')
+            return redirect(url_for('home'))
+
+        cursor.execute('UPDATE bookings SET canceled = 1 WHERE booking_id = ?', (booking_id,))
+        cursor.execute('UPDATE seats SET booked_seats = booked_seats - 1 WHERE theater = ? AND screen = ?', (theater, screen))
+        conn.commit()
+
+    flash('Booking canceled successfully.')
+    return redirect(url_for('home'))
 
 # Book Tickets - FINAL
 @app.route('/finalBookTickets', methods=['GET', 'POST'])
 def finalBookTickets():
-    booking_no = random.randint(250, 5670)
-    return render_template('finalBookTickets.html', booking_no=booking_no)
+    booking_id = request.args.get('booking_id')
+    return render_template('finalBookTickets.html', booking_id=booking_id)
 
 # API route to fetch bookings
 @app.route('/api/bookings', methods=['GET'])
 def get_bookings():
     with sqlite3.connect('booking.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM bookings')
+        cursor.execute('SELECT * FROM bookings WHERE canceled = 0')
         rows = cursor.fetchall()
         bookings = [
             {
@@ -214,7 +269,8 @@ def get_bookings():
                 "food_items": row[4],
                 "total_price": row[5],
                 "booking_time": row[6],
-                "seat_number": row[7]
+                "seat_number": row[7],
+                "booking_id": row[8]
             }
             for row in rows
         ]

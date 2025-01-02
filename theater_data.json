@@ -1,0 +1,26 @@
+{
+    "theaters": {
+        "pvr-mumbai": "PVR Cinemas - Mumbai",
+        "inox-delhi": "INOX - Delhi",
+        "cinepolis-bangalore": "Cinepolis - Bangalore"
+    },
+    "movies": {
+        "inception": {
+            "name": "Inception",
+            "date_time": "10/28/2024, 2:30:00 PM"
+        },
+        "avatar": {
+            "name": "Avatar",
+            "date_time": "10/29/2024, 6:00:00 PM"
+        },
+        "joker": {
+            "name": "Joker",
+            "date_time": "10/30/2024, 9:00:00 PM"
+        }
+    },
+    "screens": {
+        "gold": 400,
+        "max": 300,
+        "general": 200
+    }
+}
