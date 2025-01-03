@@ -1,8 +1,29 @@
 {
     "theaters": {
-        "pvr-mumbai": "PVR Cinemas - Mumbai",
-        "inox-delhi": "INOX - Delhi",
-        "cinepolis-bangalore": "Cinepolis - Bangalore"
+        "pvr-mumbai": {
+            "name": "PVR Cinemas - Mumbai",
+            "screens": {
+                "gold": {"price": 400, "total_seats": 2},
+                "max": {"price": 300, "total_seats": 5},
+                "general": {"price": 200, "total_seats": 10}
+            }
+        },
+        "inox-delhi": {
+            "name": "INOX - Delhi",
+            "screens": {
+                "gold": {"price": 400, "total_seats": 2},
+                "max": {"price": 300, "total_seats": 5},
+                "general": {"price": 200, "total_seats": 10}
+            }
+        },
+        "cinepolis-bangalore": {
+            "name": "Cinepolis - Bangalore",
+            "screens": {
+                "gold": {"price": 400, "total_seats": 2},
+                "max": {"price": 300, "total_seats": 5},
+                "general": {"price": 200, "total_seats": 10}
+            }
+        }
     },
     "movies": {
         "inception": {
@@ -17,10 +38,6 @@
             "name": "Joker",
             "date_time": "10/30/2024, 9:00:00 PM"
         }
-    },
-    "screens": {
-        "gold": 400,
-        "max": 300,
-        "general": 200
     }
 }
+

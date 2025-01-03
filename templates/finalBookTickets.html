@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment</title>
-    <link
-      href="{{url_for('static', filename='css/style.css')}}"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
     <div class="container">
-      <h1>Tickets booked !!</h1>
-      <p>Booking ID : {{booking_no}}</p>
-
-      <div class="next-section">
-        <br />
-        <p>Enjoy the movie !!</p>
-        <p>(cancelation available till 30 min prior the show)</p>
-      </div>
+        <h1>Tickets Booked Successfully!</h1>
+        <p><strong>Booking ID:</strong> {{ booking_id }}</p>
+        <p>Enjoy the show! 🥳</p>
+        <button onclick="window.location.href='{{ url_for('home') }}'">Go to Homepage</button>
     </div>
-  </body>
+</body>
 </html>

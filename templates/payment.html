@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment</title>
-    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <h1>Final Payment</h1>
-        <p> Total amount : {{final_price}}</p>
-
-        <form action="{{ url_for('payment') }}" method="POST">
-            <button value="submit"> BOOK TICKETS </button>
+        <p><strong>Total Amount:</strong> Rs. {{ total_price }}</p>
+        <form method="POST" action="{{ url_for('payment') }}">
+            <button type="submit">Confirm Payment</button>
         </form>
-        
-         
     </div>
 </body>
 </html>

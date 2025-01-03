@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Bookings</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Previous Bookings</h1>
+
+        <!-- Search Bar -->
+        <form method="GET" action="{{ url_for('view_previous_bookings') }}">
+            <input type="text" name="booking_id" placeholder="Search by Booking ID" value="{{ search_query }}" />
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Previous Bookings List -->
+        {% if previous_bookings %}
+            <ul>
+                {% for booking in previous_bookings %}
+                <li>
+                    <strong>Booking ID:</strong> {{ booking.booking_id }}<br>
+                    <strong>Movie:</strong> {{ booking.movie }}<br>
+                    <strong>Theater:</strong> {{ booking.theater }}<br>
+                    <strong>Screen:</strong> {{ booking.screen }}<br>
+                    <strong>Food Items:</strong> {{ booking.food_items.split(",") | join(", ") }}<br>
+                    <strong>Total Price:</strong> Rs. {{ booking.total_price }}<br>
+                    <strong>Booking Time:</strong> {{ booking.booking_time }}<br>
+                    <!-- Cancellation Button -->
+                    <form method="POST" action="{{ url_for('cancel_booking') }}" style="display: inline;">
+                        <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
+                        <button type="submit" {% if not booking.cancelable %} disabled {% endif %}>Cancel</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No previous bookings found.</p>
+        {% endif %}
+
+        <button onclick="window.location.href='{{ url_for('home') }}'" class="btn">Back to Homepage</button>
+    </div>
+</body>
+</html>

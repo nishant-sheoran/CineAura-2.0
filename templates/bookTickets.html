@@ -1,38 +1,57 @@
-<h1>Book Movie Tickets</h1>
-<p>Select your preferences below</p>
-<form method="POST" action="{{ url_for('book_tickets') }}">
-    <!-- Select Theater -->
-    <label for="theater">Select Theater 📽</label>
-    <select id="theater" name="theater">
-        {% for theater_id, theater_name in theaters.items() %}
-        <option value="{{ theater_id }}" {% if request.form.get('theater') == theater_id %} selected {% endif %}>
-            {{ theater_name }}
-        </option>
-        {% endfor %}
-    </select>
-    <!-- Select Movie -->
-    <label for="movie">Select Movie 🎥 </label>
-    <select id="movie" name="movie">
-        {% for movie_id, movie_details in movies.items() %}
-        <option value="{{ movie_id }}" {% if request.form.get('movie') == movie_id %} selected {% endif %}>
-            {{ movie_details.name }} - {{ movie_details.date_time }}
-        </option>
-        {% endfor %}
-    </select>
-    <!-- Select Screen Type -->
-    <label for="screen">Select Screen Type 🎬 </label>
-    <select id="screen" name="screen">
-        {% for screen_type, price in screens.items() %}
-        <option value="{{ screen_type }}" {% if request.form.get('screen') == screen_type %} selected {% endif %}>
-            {{ screen_type | capitalize }} - Rs. {{ price }}
-        </option>
-        {% endfor %}
-    </select>
-    <button type="submit">Confirm tickets</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Tickets</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Book Movie Tickets</h1>
+        <p>Select your preferences below</p>
 
-    <div class="next-section">
-        <br>
-        <p>Once the tickets are confirmed, you can proceed with adding beverages and food preferences.</p>
+        <form method="POST" action="{{ url_for('book_tickets') }}">
+            <!-- Select Theater -->
+            <label for="theater">Select Theater 📽</label>
+            <select id="theater" name="theater" required>
+                {% for theater in theaters %}
+                <option value="{{ theater.id }}">{{ theater.name }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Select Movie -->
+            <label for="movie">Select Movie 🎥</label>
+            <select id="movie" name="movie" required>
+                {% for movie in movies %}
+                <option value="{{ movie.id }}">{{ movie.name }} - {{ movie.date_time }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Select Screen Type -->
+            <label for="screen">Select Screen Type 🎬</label>
+            <select id="screen" name="screen" required>
+                {% for screen in screens %}
+                <option value="{{ screen.type }}">
+                    {{ screen.type | capitalize }} - Rs. {{ screen.price }} ({{ screen.total_seats }} seats)
+                </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Confirm Tickets</button>
+
+            <div class="next-section">
+                <br>
+                <p>Once the tickets are confirmed, you can proceed with adding beverages and food preferences.</p>
+            </div>
+        </form>
     </div>
-</form>
+    <!-- Navigation Buttons -->
+<div class="nav-options">
+    <button onclick="window.location.href='{{ url_for('view_previous_bookings') }}'" class="btn">View Previous Bookings</button>
+</div>
+</body>
+</html>
+
+
 
