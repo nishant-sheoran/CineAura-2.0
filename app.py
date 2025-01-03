@@ -74,6 +74,7 @@ def book_tickets():
         movie = request.form.get("movie")
         screen = request.form.get("screen")
 
+        # Ensure all required fields are provided
         if not all([theater, movie, screen]):
             flash('Please select theater, movie, and screen.')
             return redirect(url_for('book_tickets'))
@@ -88,10 +89,23 @@ def book_tickets():
             cursor.execute('SELECT total_seats, booked_seats FROM seats WHERE theater = ? AND screen = ?', (theater, screen))
             seat_data = cursor.fetchone()
 
-            if not seat_data or seat_data[1] >= seat_data[0]:
-                flash('No seats available. You can join the waiting list.')
-                return redirect(url_for('join_waiting_list'))
+            # Handle invalid or missing seat data
+            if not seat_data:
+                flash('Invalid theater or screen selection. Please try again.')
+                return redirect(url_for('book_tickets'))
 
+            total_seats, booked_seats = seat_data
+
+            # If no seats are available, add to the waitlist
+            if booked_seats >= total_seats:
+                cursor.execute('''INSERT INTO waiting_list (theater, movie, screen, join_time)
+                                  VALUES (?, ?, ?, ?)''',
+                               (theater, movie, screen, datetime.datetime.now()))
+                conn.commit()
+                flash(f"No seats available. You have been added to the waiting list for {movie} at {theater} ({screen}).")
+                return redirect(url_for('home'))
+
+        # If seats are available, proceed to the next step
         return redirect(url_for("select_beverages"))
 
     # Prepare dropdown data for the template
@@ -191,23 +205,6 @@ def final_booking():
         flash("No booking found!")
         return redirect(url_for("home"))
     return render_template("finalBookTickets.html", booking_id=booking_id)
-
-
-# Join waiting list
-@app.route("/join_waiting_list", methods=['GET', 'POST'])
-def join_waiting_list():
-    if request.method == 'POST':
-        user_data = request.form.get('user_data')
-        with sqlite3.connect('booking.db') as conn:
-            cursor = conn.cursor()
-            cursor.execute('''INSERT INTO waiting_list (theater, movie, screen, user_data, join_time)
-                              VALUES (?, ?, ?, ?, ?)''',
-                           (session['theater'], session['movie'], session['screen'], user_data, datetime.datetime.now()))
-            conn.commit()
-        flash('You have been added to the waiting list.')
-        return redirect(url_for('home'))
-
-    return render_template("waitingList.html")
 
 # Cancel booking
 @app.route("/cancel_booking", methods=['POST'])

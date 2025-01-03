@@ -6,13 +6,35 @@
     <title>CineAura - Movie Booking</title>
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
+<style>
+    .nav-options {
+        display: flex;
+        gap: 10px;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
 <body>
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         <h1>Welcome to CineAura</h1>
         <p>Book your favorite movies at your preferred theaters!</p>
 
         <div class="nav-options">
             <button onclick="window.location.href='{{ url_for('book_tickets') }}'" class="btn">Book Tickets</button>
+            <button onclick="window.location.href='{{ url_for('view_previous_bookings') }}'" class="btn">View Previous Bookings</button>
         </div>
     </div>
 </body>
