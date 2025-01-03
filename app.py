@@ -160,8 +160,8 @@ def payment():
     total_price = session.get('total_price')
 
     if not all([theater, movie, screen, total_price]):
-        flash('Invalid booking details.')
-        return redirect(url_for('home'))
+        flash("Incomplete booking details. Please start again.")
+        return redirect(url_for('book_tickets'))
 
     if request.method == 'POST':
         # Generate booking ID
@@ -172,14 +172,12 @@ def payment():
         with sqlite3.connect('booking.db') as conn:
             cursor = conn.cursor()
             cursor.execute('SELECT booked_seats FROM seats WHERE theater = ? AND screen = ?', (theater, screen))
-            booked_seats = cursor.fetchone()
-            if booked_seats:
-                booked_seats = booked_seats[0] + 1
-                cursor.execute('UPDATE seats SET booked_seats = ? WHERE theater = ? AND screen = ?', (booked_seats, theater, screen))
-                cursor.execute('''INSERT INTO bookings (theater, movie, screen, food_items, total_price, booking_time, seat_number, booking_id)
-                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-                               (theater, movie, screen, food_items, total_price, datetime.datetime.now(), booked_seats, booking_id))
-                conn.commit()
+            booked_seats = cursor.fetchone()[0] + 1
+            cursor.execute('UPDATE seats SET booked_seats = booked_seats + 1 WHERE theater = ? AND screen = ?', (theater, screen))
+            cursor.execute('''INSERT INTO bookings (theater, movie, screen, food_items, total_price, booking_time, seat_number, booking_id)
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                           (theater, movie, screen, food_items, total_price, datetime.datetime.now(), booked_seats, booking_id))
+            conn.commit()
 
         return redirect(url_for("final_booking"))
 
