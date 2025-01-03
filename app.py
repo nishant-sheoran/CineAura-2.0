@@ -186,9 +186,14 @@ def payment():
     return render_template("payment.html", total_price=total_price)
 
 # Final booking page
-@app.route("/final_booking")
+@app.route('/final_booking', methods=['GET'])
 def final_booking():
-    return render_template("finalBookTickets.html", booking_id=session.get('booking_id'))
+    booking_id = session.get('booking_id', None)
+    if not booking_id:
+        flash("No booking found!")
+        return redirect(url_for("home"))
+    return render_template("finalBookTickets.html", booking_id=booking_id)
+
 
 # Join waiting list
 @app.route("/join_waiting_list", methods=['GET', 'POST'])

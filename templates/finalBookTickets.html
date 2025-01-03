@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tickets Booked</title>
-    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+    <title>Booking Confirmed</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <h1>Tickets Booked Successfully!</h1>
-        <p>Booking ID: {{ booking_no }}</p>
-        <p>Enjoy the movie! (Cancellation available up to 30 minutes before the show)</p>
-        <button onclick="window.location.href='{{ url_for('book_tickets') }}'" class="toggle-btn">
-          Back to Homepage
-        </button>        
+        <p><strong>Booking ID:</strong> {{ booking_id }}</p>
+        <p>Enjoy the show! 🥳</p>
+        <button onclick="window.location.href='{{ url_for('home') }}'">Go to Homepage</button>
     </div>
 </body>
 </html>
