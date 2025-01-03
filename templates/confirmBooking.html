@@ -9,7 +9,6 @@
 <body>
     <div class="container">
         <h1>Confirm your Booking</h1>
-        <br> 
         <p><strong>Theater:</strong> {{ theater }}</p>
         <p><strong>Movie:</strong> {{ movie }}</p>
         <p><strong>Screen:</strong> {{ screen }}</p>
@@ -17,17 +16,20 @@
             {% if food_items %}
                 <ul>
                     {% for item in food_items %}
-                        <p>{{item}}</p>
+                        <li>{{ item }}</li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>None Selected</p>
+                None Selected
             {% endif %}
         </p>
 
         <form action="{{ url_for('payment') }}" method="GET">
             <button type="submit">Proceed to Payment</button>
         </form>
+        <button onclick="window.location.href='{{ url_for('book_tickets') }}'" class="toggle-btn">
+            Back to Homepage
+          </button>          
     </div>
 </body>
 </html>

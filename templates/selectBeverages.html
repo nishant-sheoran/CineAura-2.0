@@ -4,37 +4,79 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Select Food and Beverages</title>
-    <link
-      href="{{url_for('static', filename='css/style.css')}}"
-      rel="stylesheet"
-    />
+    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet" />
+    <style>
+      .toggle-btn {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #f0f0f0;
+        color: #333;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .toggle-btn.selected {
+        background-color: #4caf50;
+        color: white;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-      <h1>Select your Food&Beverages 🍿🍟</h1>
-      <form method="POST" action="{{url_for('select_beverages')}}">
+      <h1>Select Food & Beverages 🍿🍟</h1>
+      <form method="POST" action="{{ url_for('select_beverages') }}">
         <div class="food-options">
-          <label>
-            <input type="checkbox" name="foodandbeverages" value="Popcorn" />
-            <div class="food-option">Popcorn - Rs.250</div>
-          </label>
-          <label>
-            <input type="checkbox" name="foodandbeverages" value="Sandwich" />
-            <div class="food-option">Sandwich - Rs.100</div>
-          </label>
+          <button
+            type="button"
+            class="toggle-btn"
+            data-value="Popcorn"
+            onclick="toggleSelection(this)"
+          >
+            Popcorn - Rs. 250
+          </button>
+          <button
+            type="button"
+            class="toggle-btn"
+            data-value="Sandwich"
+            onclick="toggleSelection(this)"
+          >
+            Sandwich - Rs. 100
+          </button>
         </div>
-        <button type="submit">Confirm Food and Beverages</button>
 
-        <div class="next-section">
-          <p>
-            For discounts -<br />
-            <strong>
-              GOLD SCREEN - 10%<br />
-              MAX SCREEEN - 5%
-            </strong>
-          </p>
-        </div>
+        <!-- Hidden inputs to send data to the server -->
+        <input type="hidden" name="foodandbeverages" id="Popcorn" />
+        <input type="hidden" name="foodandbeverages" id="Sandwich" />
+
+        <button type="submit" class="toggle-btn" style="background-color: #007bff; color: white;">
+          Confirm Food and Beverages
+        </button>
       </form>
+
+      <div class="next-section">
+        <button onclick="window.location.href='{{ url_for('book_tickets') }}'" class="toggle-btn">
+          Back to Homepage
+        </button>        
+      </div>
     </div>
+
+    <script>
+      function toggleSelection(button) {
+        const item = button.dataset.value;
+        const hiddenInput = document.getElementById(item);
+
+        if (button.classList.contains("selected")) {
+          button.classList.remove("selected");
+          hiddenInput.value = ""; // Deselect
+        } else {
+          button.classList.add("selected");
+          hiddenInput.value = item; // Select
+        }
+      }
+    </script>
   </body>
 </html>
+
