@@ -21,14 +21,16 @@
             <ul>
                 {% for booking in previous_bookings %}
                 <li>
-                    <strong>Booking ID:</strong> {{ booking.booking_no }} |
-                    <strong>Movie:</strong> {{ booking.movie }} |
-                    <strong>Theater:</strong> {{ booking.theater }} |
-                    <strong>Screen:</strong> {{ booking.screen }} |
-                    <strong>Food Items:</strong> {{ booking.food_items | join(", ") }}
+                    <strong>Booking ID:</strong> {{ booking.booking_id }}<br>
+                    <strong>Movie:</strong> {{ booking.movie }}<br>
+                    <strong>Theater:</strong> {{ booking.theater }}<br>
+                    <strong>Screen:</strong> {{ booking.screen }}<br>
+                    <strong>Food Items:</strong> {{ booking.food_items.split(",") | join(", ") }}<br>
+                    <strong>Total Price:</strong> Rs. {{ booking.total_price }}<br>
+                    <strong>Booking Time:</strong> {{ booking.booking_time }}<br>
                     <!-- Cancellation Button -->
                     <form method="POST" action="{{ url_for('cancel_booking') }}" style="display: inline;">
-                        <input type="hidden" name="booking_no" value="{{ booking.booking_no }}">
+                        <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
                         <button type="submit" {% if not booking.cancelable %} disabled {% endif %}>Cancel</button>
                     </form>
                 </li>
@@ -38,7 +40,7 @@
             <p>No previous bookings found.</p>
         {% endif %}
 
-        <button onclick="window.location.href='{{ url_for('index') }}'" class="btn">Back to Homepage</button>
+        <button onclick="window.location.href='{{ url_for('home') }}'" class="btn">Back to Homepage</button>
     </div>
 </body>
 </html>

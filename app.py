@@ -222,24 +222,29 @@ def cancel_booking():
     return redirect(url_for("view_previous_bookings"))
 
 # View previous bookings
-@app.route("/view_previous_bookings")
+@app.route("/view_previous_bookings", methods=["GET"])
 def view_previous_bookings():
     with sqlite3.connect('booking.db') as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM bookings WHERE canceled = 0")
         rows = cursor.fetchall()
-        bookings = [
-            {
-                "booking_no": row[8],
+        bookings = []
+        now = datetime.datetime.now()
+        for row in rows:
+            booking_time = datetime.datetime.strptime(row[6], '%Y-%m-%d %H:%M:%S.%f')
+            cancelable = (booking_time - now).total_seconds() > 30 * 60
+            bookings.append({
+                "id": row[0],
                 "theater": row[1],
                 "movie": row[2],
                 "screen": row[3],
                 "food_items": row[4],
                 "total_price": row[5],
-                "booking_time": row[6]
-            }
-            for row in rows
-        ]
+                "booking_time": row[6],
+                "seat_number": row[7],
+                "booking_id": row[8],
+                "cancelable": cancelable
+            })
     return render_template("previousBookings.html", previous_bookings=bookings)
 
 if __name__ == "__main__":
