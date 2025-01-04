@@ -3,43 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Previous Bookings</title>
+    <title>Your Previous Bookings</title>
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        .booking-card {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .booking-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .booking-card .details {
+            margin-bottom: 10px;
+        }
+        .btn-cancel {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .btn-cancel:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         <h1>Your Previous Bookings</h1>
-
-        <!-- Search Bar -->
-        <form method="GET" action="{{ url_for('view_previous_bookings') }}">
-            <input type="text" name="booking_id" placeholder="Search by Booking ID" value="{{ search_query }}" />
-            <button type="submit">Search</button>
-        </form>
-
-        <!-- Previous Bookings List -->
         {% if previous_bookings %}
-            <ul>
-                {% for booking in previous_bookings %}
-                <li>
-                    <strong>Booking ID:</strong> {{ booking.booking_id }}<br>
-                    <strong>Movie:</strong> {{ booking.movie }}<br>
-                    <strong>Theater:</strong> {{ booking.theater }}<br>
-                    <strong>Screen:</strong> {{ booking.screen }}<br>
-                    <strong>Food Items:</strong> {{ booking.food_items.split(",") | join(", ") }}<br>
-                    <strong>Total Price:</strong> Rs. {{ booking.total_price }}<br>
-                    <strong>Booking Time:</strong> {{ booking.booking_time }}<br>
-                    <!-- Cancellation Button -->
-                    <form method="POST" action="{{ url_for('cancel_booking') }}" style="display: inline;">
-                        <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
-                        <button type="submit" {% if not booking.cancelable %} disabled {% endif %}>Cancel</button>
-                    </form>
-                </li>
-                {% endfor %}
-            </ul>
+            {% for booking in previous_bookings %}
+            <div class="booking-card">
+                <h3>Booking ID: {{ booking.booking_id }}</h3>
+                <p class="details"><strong>Movie:</strong> {{ booking.movie }}</p>
+                <p class="details"><strong>Theater:</strong> {{ booking.theater }}</p>
+                <p class="details"><strong>Screen:</strong> {{ booking.screen }}</p>
+                <p class="details"><strong>Food Items:</strong> {{ booking.food_items.split(",") | join(", ") }}</p>
+                <p class="details"><strong>Total Price:</strong> Rs. {{ booking.total_price }}</p>
+                <p class="details"><strong>Booking Time:</strong> {{ booking.booking_time }}</p>
+                {% if booking.cancelable %}
+                <form method="POST" action="{{ url_for('cancel_booking') }}">
+                    <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
+                    <button type="submit" class="btn-cancel">Cancel</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
         {% else %}
             <p>No previous bookings found.</p>
         {% endif %}
-
         <button onclick="window.location.href='{{ url_for('home') }}'" class="btn">Back to Homepage</button>
     </div>
 </body>

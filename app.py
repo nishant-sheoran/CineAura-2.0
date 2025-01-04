@@ -212,9 +212,20 @@ def cancel_booking():
     booking_id = request.form.get('booking_id')
     with sqlite3.connect("booking.db") as conn:
         cursor = conn.cursor()
+        cursor.execute("SELECT theater, screen FROM bookings WHERE booking_id = ? AND canceled = 0", (booking_id,))
+        booking = cursor.fetchone()
+
+        if not booking:
+            flash("Booking not found or already canceled.")
+            return redirect(url_for("view_previous_bookings"))
+
+        theater, screen = booking
+
+        # Proceed with cancellation
         cursor.execute("UPDATE bookings SET canceled = 1 WHERE booking_id = ?", (booking_id,))
-        cursor.execute('UPDATE seats SET booked_seats = booked_seats - 1 WHERE theater = ? AND screen = ?', (session['theater'], session['screen']))
+        cursor.execute("UPDATE seats SET booked_seats = booked_seats - 1 WHERE theater = ? AND screen = ?", (theater, screen))
         conn.commit()
+
     flash("Booking canceled successfully!")
     return redirect(url_for("view_previous_bookings"))
 
@@ -229,7 +240,7 @@ def view_previous_bookings():
         now = datetime.datetime.now()
         for row in rows:
             booking_time = datetime.datetime.strptime(row[6], '%Y-%m-%d %H:%M:%S.%f')
-            cancelable = (booking_time - now).total_seconds() > 30 * 60
+            cancelable = (booking_time - datetime.datetime.now()).total_seconds() > 30 * 60
             bookings.append({
                 "id": row[0],
                 "theater": row[1],
