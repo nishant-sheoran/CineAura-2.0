@@ -238,9 +238,31 @@ def view_previous_bookings():
         rows = cursor.fetchall()
         bookings = []
         now = datetime.datetime.now()
+        print(f"Current Time: {now}")  # Debug log
+
         for row in rows:
-            booking_time = datetime.datetime.strptime(row[6], '%Y-%m-%d %H:%M:%S.%f')
-            cancelable = (booking_time - datetime.datetime.now()).total_seconds() > 30 * 60
+            movie = row[2]  # Movie name from the booking record
+            try:
+                # Access movie data directly from JSON
+                movie_data = theater_data.get('movies', {}).get(movie, {})
+                show_time_str = movie_data.get('date_time')
+
+                if not show_time_str:
+                    raise KeyError(f"'date_time' not found for movie {movie}")
+
+                # Parse the movie show time
+                show_time = datetime.datetime.strptime(show_time_str, '%m/%d/%Y, %I:%M:%S %p')
+                print(f"Show Time for {movie}: {show_time}")  # Debug log
+
+                # Determine if cancellation is allowed based on show time
+                cancelable = (show_time - now).total_seconds() > 30 * 60
+            except KeyError as e:
+                print(f"Error: Missing data for {movie} - {e}")  # Debug log
+                continue
+            except ValueError as e:
+                print(f"Error: Invalid date format for {movie} - {e}")  # Debug log
+                continue
+
             bookings.append({
                 "id": row[0],
                 "theater": row[1],
@@ -251,9 +273,15 @@ def view_previous_bookings():
                 "booking_time": row[6],
                 "seat_number": row[7],
                 "booking_id": row[8],
+                "show_time": show_time.strftime('%Y-%m-%d %I:%M %p'),
                 "cancelable": cancelable
             })
+
+    # Check if bookings list is populated
+    if not bookings:
+        print("No bookings found!")  # Debug log
     return render_template("previousBookings.html", previous_bookings=bookings)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
