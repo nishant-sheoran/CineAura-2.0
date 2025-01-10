@@ -239,8 +239,9 @@ def view_previous_bookings():
         bookings = []
         now = datetime.datetime.now()
 
-        print(f"DEBUG: Current Time: {now}")  # Debug log
+        # <!-- DEBUG: Current Time: {now} -->
 
+        # Process each booking
         for row in rows:
             movie = row[2]  # Movie name from the booking record
             booking_id = row[8]
@@ -252,7 +253,7 @@ def view_previous_bookings():
                     continue
                 show_time = datetime.datetime.strptime(show_time_str, '%m/%d/%Y, %I:%M:%S %p')
                 cancelable = now < show_time - datetime.timedelta(minutes=30)
-                print(f"DEBUG: Booking ID: {booking_id}, Show Time: {show_time}, Cancelable: {cancelable}")
+                # <!-- DEBUG: Booking ID: {booking_id}, Show Time: {show_time}, Cancelable: {cancelable} -->
             except (KeyError, ValueError) as e:
                 print(f"ERROR: Issue with booking ID {booking_id}: {e}")
                 continue
@@ -272,8 +273,6 @@ def view_previous_bookings():
             })
 
     return render_template("previousBookings.html", previous_bookings=bookings)
-
-
 
 
 if __name__ == "__main__":
