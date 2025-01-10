@@ -53,6 +53,7 @@
             <div class="booking-card">
                 <h3>Booking ID: {{ booking.booking_id }}</h3>
                 <p class="details"><strong>Movie:</strong> {{ booking.movie }}</p>
+                <p class="details"><strong>Show Time:</strong> {{ booking.show_time }}</p>
                 <p class="details"><strong>Theater:</strong> {{ booking.theater }}</p>
                 <p class="details"><strong>Screen:</strong> {{ booking.screen }}</p>
                 <p class="details"><strong>Food Items:</strong> {{ booking.food_items.split(",") | join(", ") }}</p>
@@ -63,6 +64,8 @@
                     <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
                     <button type="submit" class="btn-cancel">Cancel</button>
                 </form>
+                {% else %}
+                <p><em>Cancellation is no longer available.</em></p>
                 {% endif %}
             </div>
             {% endfor %}

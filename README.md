@@ -1,18 +1,17 @@
-
-# **CineAura** 🎬  
+# **CineAura** 🎮  
 *A Comprehensive Theater Ticket and Food Management System*
 
 ---
 
 ## **Overview**  
-**CineAura** is a Flask-based web application that simplifies ticket booking and food management for a nationwide moving theater company. The system supports seamless booking, automatic seat allocation, food order integration, and waitlist handling, offering a smooth experience for both customers and theater operators.
+**CineAura** is a Flask-based web application that simplifies ticket booking and food management for a nationwide movie theater company. The system supports seamless booking, automatic seat allocation, food order integration, and inline waitlist handling, offering a smooth experience for both customers and theater operators.
 
 ---
 
 ## **Features**  
 
 ### 🎟 **Ticket Booking**  
-- Multi-screen support:  
+- Multi-screen support with dynamic pricing from JSON data:  
   - **Gold**: ₹400/ticket (2 seats/screen)  
   - **Max**: ₹300/ticket (5 seats/screen)  
   - **General**: ₹200/ticket (10 seats/screen)  
@@ -25,11 +24,11 @@
   - Max ticket: **5% off on food**  
 
 ### 🕒 **Booking Cancellation**  
-- Easy cancellations up to **30 minutes** before showtime.  
+- Easy cancellations up to **30 minutes before showtime**.  
 
-### 📋 **Waitlist Management**  
-- Users can join a waitlist if seats are sold out.  
-- Canceled tickets are reassigned to waitlisted users on a **first-come, first-serve basis**.  
+### 📃 **Inline Waitlist Management**  
+- Users are automatically added to a waitlist if seats are sold out, without requiring user information.  
+- A flash message notifies the user of waitlist status.
 
 ---
 
@@ -84,8 +83,8 @@
 - Cancel your booking up to **30 minutes before showtime**.  
 
 ### **Waitlist**  
-- If the screen is sold out, join the waitlist (available until 30 minutes before showtime).  
-- Tickets are reassigned to waitlisted users automatically upon cancellations.  
+- If the screen is sold out, users are added to the waitlist directly without manual entry.  
+- A flash message informs users of their waitlist status.
 
 ---
 
@@ -94,31 +93,31 @@
 The application uses SQLite for managing data. Below is a simplified schema:  
 
 ### **Tables**  
-1. **Theaters**  
+1. **Bookings**  
    - `id`: Primary key  
-   - `name`: Name of the theater  
-   - `location`: City/State  
+   - `theater`: Theater name  
+   - `movie`: Movie name  
+   - `screen`: Screen type (Gold, Max, General)  
+   - `food_items`: Comma-separated string of food items  
+   - `total_price`: Total price of the booking  
+   - `booking_time`: Time when the booking was made  
+   - `seat_number`: Allocated seat number  
+   - `booking_id`: Unique alphanumeric booking ID  
+   - `canceled`: Status (0 for active, 1 for canceled)  
 
-2. **Screens**  
+2. **Seats**  
    - `id`: Primary key  
-   - `theater_id`: Foreign key linking to a theater  
-   - `type`: Screen type (Gold, Max, General)  
-   - `seats`: Total seats available  
+   - `theater`: Theater name  
+   - `screen`: Screen type  
+   - `total_seats`: Total seats in the screen  
+   - `booked_seats`: Number of seats currently booked  
 
-3. **Bookings**  
+3. **Waitlist**  
    - `id`: Primary key  
-   - `user_name`: Name of the user  
-   - `screen_id`: Foreign key linking to a screen  
-   - `movie_name`: Name of the movie  
-   - `show_time`: Showtime of the movie  
-   - `food_items`: List of food items ordered (if any)  
-   - `status`: Booking status (Confirmed/Cancelled)  
-
-4. **Waitlist**  
-   - `id`: Primary key  
-   - `screen_id`: Foreign key linking to a screen  
-   - `user_name`: Name of the user  
-   - `position`: Queue position  
+   - `theater`: Theater name  
+   - `movie`: Movie name  
+   - `screen`: Screen type  
+   - `join_time`: Time when added to the waitlist  
 
 ---
 
@@ -161,6 +160,5 @@ For questions or feedback, reach out at:
 **Nishant Sheoran**  
 GitHub: [nishant-sheoran](https://github.com/nishant-sheoran)  
 **Krithi**  
-GitHub: [kri1105](https://github.com/kri1105) 
+GitHub: [kri1105](https://github.com/kri1105)
 
----
